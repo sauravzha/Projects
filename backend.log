@@ -1,0 +1,5 @@
+[INFO] Starting Backend Server...
+[INFO] Configured to use In-Memory MongoDB.
+[INFO] In-memory MongoDB started at mongodb://127.0.0.1:54160/
+[INFO] Connected to In-memory MongoDB
+[INFO] Server running on port 5000

@@ -15,7 +15,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Vite default port
+    origin: process.env.CLIENT_URL || 'http://localhost:5173',
     credentials: true,
 }));
 app.use(helmet());
@@ -34,21 +34,29 @@ app.get('/', (req, res) => {
 
 // Database Connection
 const connectDB = async () => {
-    try {
-        const conn = await mongoose.connect(process.env.MONGO_URI as string);
-        console.log(`Connected to MongoDB: ${conn.connection.host}`);
-    } catch (err) {
-        console.log("Local MongoDB connection failed. Attempting to start in-memory MongoDB...");
+    const useInMemory = process.env.USE_IN_MEMORY_DB === 'true';
+
+    if (!useInMemory) {
         try {
-            const mongod = await MongoMemoryServer.create();
-            const uri = mongod.getUri();
-            console.log(`In-memory MongoDB started at ${uri}`);
-            await mongoose.connect(uri);
-            console.log('Connected to In-memory MongoDB');
-        } catch (memoryErr) {
-            console.error('Fatal: Could not connect to any MongoDB instance.', memoryErr);
-            process.exit(1);
+            const conn = await mongoose.connect(process.env.MONGO_URI as string);
+            console.log(`Connected to MongoDB: ${conn.connection.host}`);
+            return; // Connected successfully, exit function
+        } catch (err) {
+            console.log("Local MongoDB connection failed. Falling back to in-memory...");
         }
+    } else {
+        console.log("Configured to use In-Memory MongoDB.");
+    }
+
+    try {
+        const mongod = await MongoMemoryServer.create();
+        const uri = mongod.getUri();
+        console.log(`In-memory MongoDB started at ${uri}`);
+        await mongoose.connect(uri);
+        console.log('Connected to In-memory MongoDB');
+    } catch (memoryErr) {
+        console.error('Fatal: Could not connect to any MongoDB instance.', memoryErr);
+        process.exit(1);
     }
 };
 
