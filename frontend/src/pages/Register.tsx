@@ -23,8 +23,10 @@ const Register = () => {
         try {
             await registerUser(data);
             navigate('/');
-        } catch (error) {
-            alert('Registration failed');
+        } catch (error: any) {
+            console.error('Registration Error:', error);
+            const message = error.response?.data?.message || 'Registration failed. Please try again.';
+            alert(message);
         }
     };
 

@@ -22,8 +22,10 @@ const Login = () => {
         try {
             await login(data);
             navigate('/');
-        } catch (error) {
-            alert('Login failed');
+        } catch (error: any) {
+            console.error('Login Error:', error);
+            const message = error.response?.data?.message || 'Login failed. Please check your credentials.';
+            alert(message);
         }
     };
 
