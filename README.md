@@ -31,3 +31,19 @@ To scale this frontend-backend integration for a production environment, I would
 
 1. **Backend**: `cd backend && npm install && npm run dev`
 2. **Frontend**: `cd frontend && npm install && npm run dev`
+
+## 🚀 Deployment (Live)
+
+### Frontend (Vercel)
+
+1. Import this repo to Vercel.
+2. Set Root Directory to `frontend`.
+3. Set `VITE_API_URL` to your backend URL.
+
+### Backend (Render)
+
+1. Import this repo to Render.
+2. Set Root Directory to `backend`.
+3. Set Build Command: `npm install && npm run build`
+4. Set Start Command: `npm start`
+5. Set Env Vars: `CLIENT_URL` (frontend url) and `USE_IN_MEMORY_DB=true`.
